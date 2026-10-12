@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens. See docs/03-design-system.md for usage rules.
+ * Palette is drawn from Nepal itself: Himalayan night (brand ink), prayer-flag
+ * saffron (action), rhododendron crimson (sparing accent), Terai forest and
+ * glacier/sand neutrals.
+ */
+@theme {
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --color-ink-950: #0d1122;
+  --color-ink-900: #141a2e;
+  --color-ink-800: #1e2542;
+  --color-ink-700: #2b3460;
+  --color-ink-500: #4e5a8f;
+  --color-ink-300: #a5acd0;
+  --color-ink-100: #e4e6f2;
+
+  --color-saffron-700: #8a4a10;
+  --color-saffron-600: #a15812;
+  --color-saffron-500: #d9822b;
+  --color-saffron-300: #f0b878;
+  --color-saffron-100: #fbead6;
+
+  --color-crimson-600: #a3243a;
+  --color-crimson-500: #c2344b;
+  --color-crimson-100: #f8dfe3;
+
+  --color-forest-700: #1f4537;
+  --color-forest-500: #2f6b54;
+  --color-forest-100: #dcebe3;
+
+  --color-sand-50: #fcfaf6;
+  --color-sand-100: #f7f3ec;
+  --color-sand-200: #ede6d9;
+  --color-sand-300: #ddd2bf;
+
+  --radius-card: 1.25rem;
+  --shadow-card: 0 1px 2px rgb(20 26 46 / 0.06), 0 8px 24px -12px rgb(20 26 46 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(20 26 46 / 0.06), 0 18px 40px -16px rgb(20 26 46 / 0.28);
+
+  --animate-fade-up: fade-up 0.6s ease-out both;
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-sand-50 text-ink-900 font-sans antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+  h1, h2, h3, h4 {
+    @apply font-display text-ink-900;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  p { text-wrap: pretty; }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-saffron-500;
+  }
+  [id] { scroll-margin-top: 6rem; }
+  ::selection { @apply bg-saffron-300 text-ink-950; }
+}
+
+@layer components {
+  .prose-body > p + p { @apply mt-4; }
+  .prose-body p { @apply text-[1.0625rem] leading-relaxed text-ink-800/85; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* ---------------------------------------------------------------- Japanese
+ * Japanese pages use Noto Sans JP for text and Noto Serif JP for headings
+ * (loaded only on /ja pages; see app/[lang]/layout.tsx). Latin characters keep
+ * Inter and Fraunces. Japanese needs more line height, no letter-spacing on
+ * uppercase labels, and line breaks that don't split words awkwardly. */
+html:lang(ja) {
+  --font-sans: var(--font-inter), "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --font-display: var(--font-fraunces), "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  line-break: strict;
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+html:lang(ja) :is(h1, h2, h3, h4) {
+  line-height: 1.35;
+  word-break: auto-phrase;
+}
+html:lang(ja) .prose-body p { line-height: 1.95; }
+html:lang(ja) .uppercase { letter-spacing: 0.08em; }
+
+/* Blocks rendered in both languages (the 404 page): show the one matching the page */
+html:not(:lang(en)) .only-en, html:not(:lang(ja)) .only-ja { display: none; }

@@ -1,0 +1,398 @@
+// Future database schema for Ashutosh Travels & Tours.
+// Not wired into the app yet: see docs/06-backend-plan.md (phases 1–3).
+// To adopt: npm i -D prisma && npm i @prisma/client, set DATABASE_URL, run `npx prisma migrate dev`.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────── Shared
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ImageTone {
+  dawn
+  glacier
+  forest
+  lake
+  temple
+  dusk
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  url       String
+  alt       String
+  width     Int?
+  height    Int?
+  focalX    Float?   // 0–1, for art-directed crops
+  focalY    Float?
+  createdAt DateTime @default(now())
+
+  destinations Destination[]
+  adventures   Adventure[]
+  hotels       Hotel[]
+  packages     TourPackage[]
+}
+
+model Seo {
+  id          String  @id @default(cuid())
+  title       String
+  description String
+  ogImageId   String?
+
+  destination Destination?
+  adventure   Adventure?
+  page        Page?
+  package     TourPackage?
+}
+
+// ─────────────────────────────────────────────── Phase 2: content
+
+model Destination {
+  id               String        @id @default(cuid())
+  slug             String        @unique
+  name             String
+  region           String
+  tagline          String
+  summary          String
+  overview         String[]      // paragraphs
+  climateText      String?
+  attractionsTitle String
+  sortOrder        Int           @default(0)
+  status           PublishStatus @default(DRAFT)
+  imageId          String?
+  image            Media?        @relation(fields: [imageId], references: [id])
+  imageTone        ImageTone     @default(dawn)
+  seoId            String?       @unique
+  seo              Seo?          @relation(fields: [seoId], references: [id])
+  facts            Fact[]
+  attractions      Attraction[]
+  extraSections    ExtraSection[]
+  packages         TourPackage[]
+  updatedAt        DateTime      @updatedAt
+}
+
+/// Label/value pairs, reused by destinations, adventures, hotels and the Nepal guide.
+model Fact {
+  id                String       @id @default(cuid())
+  label             String
+  value             String
+  sortOrder         Int          @default(0)
+  needsVerification String?      // note shown to editors until cleared
+  destinationId     String?
+  destination       Destination? @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  adventureId       String?
+  adventure         Adventure?   @relation(fields: [adventureId], references: [id], onDelete: Cascade)
+  hotelId           String?
+  hotel             Hotel?       @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  guideSection      String?      // e.g. "nepal-fast-facts"
+}
+
+model Attraction {
+  id                String      @id @default(cuid())
+  destinationId     String
+  destination       Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  name              String
+  description       String
+  group             String?     // "In the valley" | "Beyond the valley"
+  tags              String[]
+  sortOrder         Int         @default(0)
+  needsVerification String?
+}
+
+/// Extra sections on a destination: "Things to do in Chitwan", "Treks from Pokhara"…
+model ExtraSection {
+  id            String      @id @default(cuid())
+  destinationId String
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  title         String
+  intro         String?
+  items         Json        // [{ name, description, needsVerification? }]
+  sortOrder     Int         @default(0)
+}
+
+model Adventure {
+  id        String        @id @default(cuid())
+  slug      String        @unique
+  name      String
+  tagline   String
+  summary   String
+  body      Json          // structured blocks for the per-adventure layout
+  status    PublishStatus @default(DRAFT)
+  sortOrder Int           @default(0)
+  imageId   String?
+  image     Media?        @relation(fields: [imageId], references: [id])
+  imageTone ImageTone     @default(dawn)
+  seoId     String?       @unique
+  seo       Seo?          @relation(fields: [seoId], references: [id])
+  facts     Fact[]
+  rivers    RaftingRiver[]
+  peaks     FlightPeak[]
+  updatedAt DateTime      @updatedAt
+}
+
+model RaftingRiver {
+  id                String    @id @default(cuid())
+  adventureId       String
+  adventure         Adventure @relation(fields: [adventureId], references: [id], onDelete: Cascade)
+  slug              String    @unique
+  name              String
+  nickname          String
+  durationMinDays   Int
+  durationMaxDays   Int
+  grade             String    // "III–IV"
+  putIn             String?
+  takeOut           String?
+  description       String
+  /// Typical grade per season; null = not runnable. Keys: janMay, junAug, sepNov, novDec
+  seasonGrades      Json?
+  sortOrder         Int       @default(0)
+  needsVerification String?
+}
+
+model FlightPeak {
+  id          String    @id @default(cuid())
+  adventureId String
+  adventure   Adventure @relation(fields: [adventureId], references: [id], onDelete: Cascade)
+  name        String
+  heightM     Int?
+  note        String?
+  sortOrder   Int       // order seen from the aircraft
+}
+
+enum HotelCity {
+  Kathmandu
+  Pokhara
+  Chitwan
+  Nagarkot
+}
+
+model Hotel {
+  id         String          @id @default(cuid())
+  slug       String          @unique
+  name       String
+  city       HotelCity
+  status     PublishStatus   @default(DRAFT)
+  imageId    String?
+  image      Media?          @relation(fields: [imageId], references: [id])
+  highlights Fact[]
+  dining     HotelOutlet[]
+  facilities HotelFacility[]
+  sortOrder  Int             @default(0)
+}
+
+model HotelOutlet {
+  id      String @id @default(cuid())
+  hotelId String
+  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  name    String
+  cuisine String
+  hours   String
+}
+
+model HotelFacility {
+  id      String @id @default(cuid())
+  hotelId String
+  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  group   String // "In your room" | "Services" | "Leisure" | "Practical"
+  label   String
+  value   String // "Yes" | "No" | free text
+}
+
+model Service {
+  id             String  @id @default(cuid())
+  slug           String  @unique
+  name           String
+  summary        String
+  description    String
+  icon           String
+  detailsPending Boolean @default(false)
+  sortOrder      Int     @default(0)
+}
+
+/// Free-form pages and guide sections (About, Nepal guide, Travel essentials).
+model Page {
+  id        String        @id @default(cuid())
+  slug      String        @unique
+  title     String
+  blocks    Json          // ordered content blocks
+  status    PublishStatus @default(DRAFT)
+  seoId     String?       @unique
+  seo       Seo?          @relation(fields: [seoId], references: [id])
+  updatedAt DateTime      @updatedAt
+}
+
+model VisaFee {
+  id        String   @id @default(cuid())
+  duration  String   // "15 days"
+  entry     String   // "Multiple entry"
+  feeUsd    Int
+  verifiedAt DateTime?
+  sortOrder Int      @default(0)
+}
+
+model SiteSetting {
+  key   String @id // "contact.phoneOffice", "contact.hours", "contact.mapEmbedUrl"…
+  value Json
+}
+
+// ─────────────────────────────────────────────── Phase 1: leads
+
+enum InquiryStatus {
+  NEW
+  CONTACTED
+  QUOTED
+  WON
+  LOST
+  SPAM
+}
+
+enum TravelStyle {
+  Budget
+  Standard
+  Luxury
+}
+
+model Inquiry {
+  id           String        @id @default(cuid())
+  reference    String        @unique // "ATT-…"
+  name         String
+  email        String
+  phone        String?
+  country      String?
+  interests    String[]
+  tripSlug     String?       // trip the request is about (src/lib/trips.ts), null for custom trips
+  startDate    DateTime?     @db.Date
+  flexibleDates Boolean      @default(false)
+  adults       Int           @default(2)
+  children     Int           @default(0)
+  travelStyle  TravelStyle?
+  contactPref  String        @default("email") // email | phone | whatsapp
+  locale       String        @default("en")    // language to reply in
+  message      String
+  status       InquiryStatus @default(NEW)
+  assigneeId   String?
+  assignee     User?         @relation(fields: [assigneeId], references: [id])
+  notes        InquiryNote[]
+  sourcePath   String?       // page the visitor came from
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([status, createdAt])
+}
+
+model InquiryNote {
+  id        String   @id @default(cuid())
+  inquiryId String
+  inquiry   Inquiry  @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  body      String
+  createdAt DateTime @default(now())
+}
+
+// ─────────────────────────────────────────────── Phase 3: products & bookings
+
+model TourPackage {
+  id            String         @id @default(cuid())
+  slug          String         @unique
+  name          String
+  summary       String
+  durationDays  Int
+  destinations  Destination[]
+  itinerary     ItineraryDay[]
+  prices        PackagePrice[]
+  departures    Departure[]
+  status        PublishStatus  @default(DRAFT)
+  imageId       String?
+  image         Media?         @relation(fields: [imageId], references: [id])
+  seoId         String?        @unique
+  seo           Seo?           @relation(fields: [seoId], references: [id])
+}
+
+model ItineraryDay {
+  id        String      @id @default(cuid())
+  packageId String
+  package   TourPackage @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  day       Int
+  title     String
+  body      String
+}
+
+model PackagePrice {
+  id        String      @id @default(cuid())
+  packageId String
+  package   TourPackage @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  style     TravelStyle
+  priceUsd  Int
+  basis     String      // "per person, twin share"
+}
+
+model Departure {
+  id        String      @id @default(cuid())
+  packageId String
+  package   TourPackage @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  startDate DateTime
+  seats     Int?
+  bookings  Booking[]
+}
+
+enum BookingStatus {
+  REQUESTED
+  CONFIRMED
+  DEPOSIT_PAID
+  CANCELLED
+}
+
+model Booking {
+  id          String        @id @default(cuid())
+  departureId String
+  departure   Departure     @relation(fields: [departureId], references: [id])
+  leadName    String
+  email       String
+  travellers  Int
+  style       TravelStyle
+  status      BookingStatus @default(REQUESTED)
+  createdAt   DateTime      @default(now())
+}
+
+// ─────────────────────────────────────────────── Staff
+
+enum Role {
+  OWNER
+  EDITOR
+  AGENT
+}
+
+model User {
+  id        String        @id @default(cuid())
+  email     String        @unique
+  name      String
+  role      Role          @default(AGENT)
+  inquiries Inquiry[]
+  notes     InquiryNote[]
+  audit     AuditLog[]
+  createdAt DateTime      @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  action    String   // "update"
+  entity    String   // "Destination"
+  entityId  String
+  before    Json?
+  after     Json?
+  createdAt DateTime @default(now())
+}
