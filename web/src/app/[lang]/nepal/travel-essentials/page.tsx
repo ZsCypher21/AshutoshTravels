@@ -1,5 +1,4 @@
 import { getContent } from "@/content";
-import { lp } from "@/i18n/config";
 import { getLocale } from "@/i18n/params";
 import { getUI } from "@/i18n/ui";
 import { photoKey } from "@/lib/images";
@@ -34,7 +33,6 @@ export default async function TravelEssentialsPage({ params }: PageProps<"/[lang
         lead={t.lead}
         image={{ alt: t.heroImage, tone: "glacier" }}
         photo={photoKey.page("travel-essentials")}
-        breadcrumbs={[{ label: ui.common.home, href: lp(locale, "/") }, { label: ui.nepal.eyebrow, href: lp(locale, "/nepal") }, { label: t.title }]}
       />
 
       <nav aria-label={ui.common.onThisPage} className="sticky top-18 z-30 border-b border-sand-200 bg-sand-50/95 backdrop-blur">

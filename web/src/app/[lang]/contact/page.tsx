@@ -1,5 +1,4 @@
 import { getContent } from "@/content";
-import { lp } from "@/i18n/config";
 import { getLocale } from "@/i18n/params";
 import { getUI } from "@/i18n/ui";
 import { photoKey } from "@/lib/images";
@@ -65,7 +64,6 @@ export default async function ContactPage({ params, searchParams }: PageProps<"/
         lead={t.lead}
         image={{ alt: t.heroImage, tone: "lake" }}
         photo={photoKey.page("contact")}
-        breadcrumbs={[{ label: ui.common.home, href: lp(locale, "/") }, { label: t.eyebrow }]}
       />
       <Section>
         <div className="grid gap-10 lg:grid-cols-[1fr_1.6fr] lg:gap-16">

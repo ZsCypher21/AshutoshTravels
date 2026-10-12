@@ -30,7 +30,7 @@ Wide landscape photos behind each page title. Text sits on top, so calm skies or
 | About us | `pages/about.jpg` | — placeholder art |
 | Contact | `pages/contact.jpg` | — placeholder art |
 | 404 page | `pages/not-found.jpg` | — placeholder art |
-| Find a trip | `pages/trips.jpg` | — placeholder art |
+| Experiences | `pages/experiences.jpg` | — placeholder art |
 | Travel guides | `pages/guides.jpg` | — placeholder art |
 | Home page "Tours" category card (the other category cards use the adventure photos) | `pages/category-tours.jpg` | — placeholder art |
 

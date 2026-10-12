@@ -1,4 +1,3 @@
-import { lp } from "@/i18n/config";
 import { getLocale } from "@/i18n/params";
 import { getUI } from "@/i18n/ui";
 import { photoKey } from "@/lib/images";
@@ -29,7 +28,6 @@ export default async function GuidesPage({ params }: PageProps<"/[lang]/guides">
         lead={t.lead}
         image={{ alt: t.heroImage, tone: "dusk" }}
         photo={photoKey.page("guides")}
-        breadcrumbs={[{ label: ui.common.home, href: lp(locale, "/") }, { label: t.eyebrow }]}
       />
       <Section>
         <ChipFilter

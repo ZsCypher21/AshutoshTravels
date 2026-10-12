@@ -48,7 +48,7 @@ export function getFooterNav(locale: Locale): { title: string; items: NavItem[] 
     {
       title: t.plan,
       items: [
-        { label: ui.ux.findTrip, href: l("/trips") },
+        { label: ui.ux.findTrip, href: l("/experiences") },
         { label: ui.ux.guides, href: l("/guides") },
         { label: t.aboutNepal, href: l("/nepal") },
         { label: t.travelEssentials, href: l("/nepal/travel-essentials") },

@@ -55,7 +55,6 @@ export default async function HotelPage({ params }: PageProps<"/[lang]/stays/[sl
         title={h.name}
         image={{ alt: h.name, tone: "temple" }}
         photo={photoKey.hotel(h.slug)}
-        breadcrumbs={[{ label: ui.common.home, href: lp(locale, "/") }, { label: ui.stays.breadcrumb, href: lp(locale, "/stays") }, { label: h.name }]}
       >
         <ButtonLink href={lp(locale, `/contact?interest=${encodeURIComponent(ui.contact.extraInterests.hotel)}`)} size="lg">{t.request}</ButtonLink>
       </PageHero>

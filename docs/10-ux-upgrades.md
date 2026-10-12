@@ -6,7 +6,7 @@ This upgrade adds the features travellers expect from a modern tour-operator sit
 
 | Feature | Where | What it does |
 |---|---|---|
-| **Find a trip** | `/trips` (new), header search icon, home hero search | All 21 trips (6 tours, 9 rafting rivers, 2 adventures, 4 bike routes) in one grid. Free-text search, filters for trip type, length and rafting grade, and sorting. Filters live in the URL, so a filtered list can be shared or bookmarked (`/trips?type=rafting&grade=hard`). On phones the filters open in a bottom sheet. An empty search offers "Plan a custom trip". |
+| **Experiences** | `/experiences` (new; old `/trips` links redirect here), header search icon, home hero search | All 21 trips (6 tours, 9 rafting rivers, 2 adventures, 4 bike routes) in one grid. Free-text search, filters for trip type, length and rafting grade, and sorting. Filters live in the URL, so a filtered list can be shared or bookmarked (`/experiences?type=rafting&grade=hard`). On phones the filters open in a bottom sheet. An empty search offers "Plan a custom trip". |
 | **Trip categories** | Home | Four category cards (Tours, Rafting, Adventures, Biking) with trip counts, linking to the pre-filtered finder. A swipeable rail on phones. |
 | **Featured trips** | Home | Trip cards with type badge, grade badge, duration and price (or "Price on request"). |
 | **River trip pages** | `/adventures/white-water-rafting/<river>` (9 new pages) | A full trip page: quick-facts bar, sticky section tabs, overview, put-in → river → take-out timeline, season grades, price, gallery, map, FAQs, reviews, similar rivers and a sticky booking card. |
@@ -16,7 +16,7 @@ This upgrade adds the features travellers expect from a modern tour-operator sit
 | **3-step booking request** | `/contact` | Replaces the single long form: 1) trip, dates, flexible dates, adults/children steppers, travel style; 2) contact details and preferred contact method; 3) review with "Edit" links and consent. Progress bar, validation per step, the draft is kept if the visitor leaves, and the success screen shows a reference number and the next steps. Any "Enquire" button passes the trip along (`/contact?trip=rafting-trisuli`). |
 | **FAQs** | River pages, rafting, travel essentials, contact | Accordion with "Expand all". Every answer is taken from existing content. |
 | **Maps** | Destination, river and contact pages | Click-to-load Google Map (no third-party requests or cookies until the visitor asks), plus an "Open in Google Maps" link. |
-| **Navigation** | Every page | Search icon in the header, "Find a trip" at the top of the phone menu, "Travel guides" in the Nepal Guide menu and footer, "Back to …" link replacing the long breadcrumb trail on phones, and a back-to-top button on long pages. |
+| **Navigation** | Every page | Search icon in the header, "Experiences" at the top of the phone menu, "Travel guides" in the Nepal Guide menu and footer, and a back-to-top button on long pages. |
 
 ## New components
 
@@ -54,7 +54,7 @@ Removed: `features/InquiryForm` (replaced by `BookingForm`).
 | `src/content/reviews.ts` | Reviews. **Empty placeholder.** |
 | `src/i18n/ui.ts` | All new labels, in English and Japanese. |
 
-Trip slugs: destinations use their own slug (`pokhara`), rivers `rafting-<river>` (`rafting-trisuli`), adventures their slug (`mountain-flight`, `bungee-jumping`), bike routes `biking-<route>` (`biking-back-trails-of-kathmandu`). `npm run dev` then `/trips` shows them all.
+Trip slugs: destinations use their own slug (`pokhara`), rivers `rafting-<river>` (`rafting-trisuli`), adventures their slug (`mountain-flight`, `bungee-jumping`), bike routes `biking-<route>` (`biking-back-trails-of-kathmandu`). `npm run dev` then `/experiences` shows them all.
 
 ## Filling in what the PDF doesn't have
 

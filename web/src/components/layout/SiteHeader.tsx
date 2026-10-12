@@ -32,6 +32,9 @@ export function SiteHeader({
   const pathname = usePathname() ?? "/";
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  // Menu whose dropdown was just used: kept closed until the pointer leaves it,
+  // otherwise hover/focus would hold it open over the new page.
+  const [dismissed, setDismissed] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -70,9 +73,13 @@ export function SiteHeader({
         <nav aria-label={t.mainNav} className="hidden lg:block">
           <ul className="flex items-center gap-1">
             {mainNav.map((item) => (
-              <li key={item.href} className="group relative">
+              <li key={item.href} className="group relative" onMouseLeave={() => dismissed === item.href && setDismissed(null)}>
                 <Link
                   href={item.href}
+                  onClick={(e) => {
+                    if (item.children) setDismissed(item.href);
+                    e.currentTarget.blur();
+                  }}
                   className={`flex items-center gap-1 rounded-full px-3.5 py-2 text-sm font-medium transition-colors ${
                     isActive(item.href) ? (solid ? "bg-ink-900/5" : "bg-white/15") : solid ? "hover:bg-ink-900/5" : "hover:bg-white/10"
                   }`}
@@ -81,11 +88,22 @@ export function SiteHeader({
                   {item.children && <Icon name="chevron" className="size-3.5 rotate-90 opacity-60" />}
                 </Link>
                 {item.children && (
-                  <div className="invisible absolute left-1/2 top-full w-80 -translate-x-1/2 pt-3 opacity-0 transition-all group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
+                  <div
+                    className={`invisible absolute left-1/2 top-full w-80 -translate-x-1/2 pt-3 opacity-0 transition-all ${
+                      dismissed === item.href ? "" : "group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100"
+                    }`}
+                  >
                     <ul className="rounded-2xl bg-white p-2 text-ink-900 shadow-[var(--shadow-lift)] ring-1 ring-ink-900/5">
                       {item.children.map((c) => (
                         <li key={c.href}>
-                          <Link href={c.href} className="block rounded-xl px-3 py-2.5 hover:bg-sand-100">
+                          <Link
+                            href={c.href}
+                            onClick={(e) => {
+                              setDismissed(item.href);
+                              e.currentTarget.blur();
+                            }}
+                            className="block rounded-xl px-3 py-2.5 hover:bg-sand-100"
+                          >
                             <span className="block text-sm font-semibold">{c.label}</span>
                             {c.description && <span className="mt-0.5 block text-xs text-ink-500">{c.description}</span>}
                           </Link>
@@ -101,11 +119,11 @@ export function SiteHeader({
 
         <div className="flex shrink-0 items-center gap-1 sm:gap-2">
           <Link
-            href={lp(locale, "/trips")}
+            href={lp(locale, "/experiences")}
             aria-label={findTripLabel}
             title={findTripLabel}
             className={`grid size-9 place-items-center rounded-full transition-colors sm:size-10 ${solid ? "hover:bg-ink-900/5" : "hover:bg-white/10"} ${
-              isActive(lp(locale, "/trips")) ? (solid ? "bg-ink-900/5" : "bg-white/15") : ""
+              isActive(lp(locale, "/experiences")) ? (solid ? "bg-ink-900/5" : "bg-white/15") : ""
             }`}
           >
             <Icon name="search" className="size-5" />
@@ -133,7 +151,7 @@ export function SiteHeader({
       <div id="mobile-nav" hidden={!open} className="h-[calc(100dvh-4.5rem)] overflow-y-auto border-t border-ink-900/10 bg-sand-50 lg:hidden">
         <Container className="py-6">
           <Link
-            href={lp(locale, "/trips")}
+            href={lp(locale, "/experiences")}
             className="mb-8 flex h-12 items-center gap-3 rounded-full border border-sand-300 bg-white px-5 text-ink-500"
           >
             <Icon name="search" className="size-5" /> {findTripLabel}

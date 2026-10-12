@@ -58,7 +58,6 @@ export default async function RiverPage({ params }: PageProps<"/[lang]/adventure
   const t = ui.trip;
   const l = (path: string) => lp(locale, path);
   const trip = getTrip(locale, `rafting-${r.slug}`)!;
-  const rafting = c.getAdventure("white-water-rafting");
 
   const seasonRow = c.raftingSeasonMatrix.find((m) => r.name.startsWith(m.river) || r.name.includes(m.river));
   const gallery = [
@@ -104,12 +103,6 @@ export default async function RiverPage({ params }: PageProps<"/[lang]/adventure
         lead={r.description}
         image={trip.image}
         photo={trip.photo}
-        breadcrumbs={[
-          { label: ui.common.home, href: l("/") },
-          { label: ui.adventures.eyebrow, href: l("/adventures") },
-          { label: rafting?.name ?? ui.trips.categories.rafting, href: l("/adventures/white-water-rafting") },
-          { label: r.name },
-        ]}
       />
       <Container className="relative z-10 -mt-10">
         <QuickFacts
@@ -121,9 +114,7 @@ export default async function RiverPage({ params }: PageProps<"/[lang]/adventure
           ]}
         />
       </Container>
-      <div className="mt-10">
-        <SectionNav items={sections} label={ui.ux.sectionNav} />
-      </div>
+      <SectionNav items={sections} label={ui.ux.sectionNav} className="mt-10" />
 
       <Container className="grid gap-10 py-12 lg:grid-cols-[1fr_22rem] lg:gap-14 lg:py-16">
         <div className="min-w-0 space-y-16">
@@ -220,7 +211,7 @@ export default async function RiverPage({ params }: PageProps<"/[lang]/adventure
         <SectionHeading
           title={t.related}
           action={
-            <Link href={l("/trips?type=rafting")} className="inline-flex items-center gap-2 text-sm font-semibold text-saffron-600">
+            <Link href={l("/experiences?type=rafting")} className="inline-flex items-center gap-2 text-sm font-semibold text-saffron-600">
               {t.allRivers} <Icon name="arrow" className="size-4" />
             </Link>
           }

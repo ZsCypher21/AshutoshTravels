@@ -251,7 +251,6 @@ export default async function AdventurePage({ params }: PageProps<"/[lang]/adven
         lead={a.tagline}
         image={a.image}
         photo={photoKey.adventure(a.slug)}
-        breadcrumbs={[{ label: ui.common.home, href: lp(locale, "/") }, { label: ui.adventures.eyebrow, href: lp(locale, "/adventures") }, { label: a.name }]}
       >
         <ButtonLink href={trip ? inquiryHref(locale, trip) : lp(locale, `/contact?interest=${encodeURIComponent(a.name)}`)} size="lg">{t.ask(a.name)}</ButtonLink>
       </PageHero>

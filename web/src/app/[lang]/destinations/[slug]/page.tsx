@@ -61,10 +61,10 @@ export default async function DestinationPage({ params }: PageProps<"/[lang]/des
   // Gallery: extra photos from public/images/gallery/destinations/<slug>/, then one slide per sight (photo or placeholder art).
   const extraPhotos = findGallery(photoKey.gallery("destinations", d.slug));
   const gallerySlides = [
-    ...extraPhotos.map((g) => ({ caption: g.caption, node: <Artwork image={{ src: g.src, alt: g.caption || d.name, tone: d.image.tone }} sizes="(min-width: 1024px) 48vw, 85vw" className="aspect-[4/3]" /> })),
+    ...extraPhotos.map((g) => ({ caption: g.caption, node: <Artwork key={g.src} image={{ src: g.src, alt: g.caption || d.name, tone: d.image.tone }} sizes="(min-width: 1024px) 48vw, 85vw" className="aspect-[4/3]" /> })),
     ...d.attractions.map((a, n) => ({
       caption: a.name,
-      node: <Artwork image={{ alt: a.name, tone: d.image.tone }} photo={photoKey.attraction(d.slug, enAttractions[n]?.name ?? a.name)} placeholderLabel={ui.common.illustration} sizes="(min-width: 1024px) 48vw, 85vw" className="aspect-[4/3]" />,
+      node: <Artwork key={`sight-${n}`} image={{ alt: a.name, tone: d.image.tone }} photo={photoKey.attraction(d.slug, enAttractions[n]?.name ?? a.name)} placeholderLabel={ui.common.illustration} sizes="(min-width: 1024px) 48vw, 85vw" className="aspect-[4/3]" />,
     })),
   ];
   const sections = [
@@ -96,7 +96,6 @@ export default async function DestinationPage({ params }: PageProps<"/[lang]/des
         lead={d.tagline}
         image={d.image}
         photo={photoKey.destination(d.slug)}
-        breadcrumbs={[{ label: ui.common.home, href: l("/") }, { label: ui.destinations.eyebrow, href: l("/destinations") }, { label: d.name }]}
       >
         <ButtonLink href={inquiryHref(locale, trip)} size="lg">
           {t.planTrip(shortName(d.name))}
@@ -107,9 +106,7 @@ export default async function DestinationPage({ params }: PageProps<"/[lang]/des
           <QuickFacts items={d.facts.slice(0, 4).map((f, n) => ({ icon: factIcons[n], label: f.label, value: f.value }))} />
         </Container>
       )}
-      <div className="mt-10">
-        <SectionNav items={sections} label={ui.ux.sectionNav} />
-      </div>
+      <SectionNav items={sections} label={ui.ux.sectionNav} className="mt-10" />
 
       {/* Overview + facts, with the booking card alongside on desktop */}
       <Section id="overview">

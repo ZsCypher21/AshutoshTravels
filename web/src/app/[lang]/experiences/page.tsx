@@ -11,13 +11,13 @@ import { TripCard } from "@/components/features/TripCard";
 import { TripFinder, type FinderItem } from "@/components/features/TripFinder";
 import { CtaBanner } from "@/components/features/CtaBanner";
 
-export async function generateMetadata({ params }: PageProps<"/[lang]/trips">) {
+export async function generateMetadata({ params }: PageProps<"/[lang]/experiences">) {
   const locale = await getLocale(params);
-  return pageMetadata({ locale, ...getUI(locale).finder.meta, path: "/trips" });
+  return pageMetadata({ locale, ...getUI(locale).finder.meta, path: "/experiences" });
 }
 
-/** Trip finder: every trip as a card, with search, filters and sorting (see TripFinder). */
-export default async function TripsPage({ params }: PageProps<"/[lang]/trips">) {
+/** Experiences: the trip finder, every trip as a card, with search, filters and sorting (see TripFinder). */
+export default async function ExperiencesPage({ params }: PageProps<"/[lang]/experiences">) {
   const locale = await getLocale(params);
   const ui = getUI(locale);
   const t = ui.finder;
@@ -38,8 +38,7 @@ export default async function TripsPage({ params }: PageProps<"/[lang]/trips">) 
         title={t.title}
         lead={t.lead}
         image={{ alt: t.heroImage, tone: "forest" }}
-        photo={photoKey.page("trips")}
-        breadcrumbs={[{ label: ui.common.home, href: lp(locale, "/") }, { label: t.eyebrow }]}
+        photo={photoKey.page("experiences")}
       />
       <Section className="!pt-10 sm:!pt-14">
         <Suspense

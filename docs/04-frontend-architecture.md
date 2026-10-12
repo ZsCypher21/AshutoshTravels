@@ -77,7 +77,7 @@ Facts that need confirming carry a `needsVerification` note. In `next dev` these
 ## SEO
 
 - Per-page `title`, `description`, canonical URL and Open Graph/Twitter tags via `pageMetadata()` in `src/lib/site.ts`. Titles use the template "Page | Ashutosh Travels & Tours".
-- Structured data: `TravelAgency` (site-wide), `TouristDestination` with `TouristAttraction`s (destination pages), `BreadcrumbList` (every inner page).
+- Structured data: `TravelAgency` (site-wide), `TouristDestination` with `TouristAttraction`s (destination pages). (Breadcrumbs and their `BreadcrumbList` data were removed on 2026-10-12.)
 - `sitemap.xml` and `robots.txt` generated from the content files, so new destinations appear automatically.
 - Semantic HTML, one H1 per page, descriptive link text, all tab and accordion content present in the HTML.
 - Keyword-led headings and meta descriptions written for real searches ("Chitwan National Park safari", "white-water rafting in Nepal", "Nepal tourist visa").

@@ -39,7 +39,6 @@ export default async function NepalPage({ params }: PageProps<"/[lang]/nepal">) 
         lead={nepalIntro.lead}
         image={{ alt: t.heroImage, tone: "glacier" }}
         photo={photoKey.page("nepal")}
-        breadcrumbs={[{ label: ui.common.home, href: l("/") }, { label: t.eyebrow }]}
       />
 
       <Section>

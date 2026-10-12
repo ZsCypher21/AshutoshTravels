@@ -1,5 +1,4 @@
 import { getContent } from "@/content";
-import { lp } from "@/i18n/config";
 import { getLocale } from "@/i18n/params";
 import { getUI } from "@/i18n/ui";
 import { photoKey } from "@/lib/images";
@@ -30,7 +29,6 @@ export default async function StaysPage({ params }: PageProps<"/[lang]/stays">) 
         lead={t.lead}
         image={{ alt: t.heroImage, tone: "lake" }}
         photo={photoKey.page("stays")}
-        breadcrumbs={[{ label: ui.common.home, href: lp(locale, "/") }, { label: t.breadcrumb }]}
       />
       <nav aria-label={t.citiesNav} className="sticky top-18 z-30 border-b border-sand-200 bg-sand-50/95 backdrop-blur">
         <ul className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-4 py-2 sm:px-6 lg:px-8">

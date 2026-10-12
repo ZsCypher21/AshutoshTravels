@@ -6,7 +6,7 @@ The old site had five flat menu items (About Us, About Nepal, Adventure Activiti
 
 ```
 /                                   Home (hero search, trip categories, featured trips)
-├── /trips                          Find a trip: search, filter (type, length, grade), sort; filters in the URL
+├── /experiences                    Experiences: search, filter (type, length, grade), sort; filters in the URL
 ├── /destinations                   Destinations hub
 │   ├── /destinations/kathmandu-valley   (incl. "Beyond the valley": Nagarkot, Dhulikhel, Bandipur, Gorkha…)
 │   ├── /destinations/patan
@@ -77,12 +77,12 @@ Dropdowns list each child page with a one-line description. They open on hover a
 
 **Footer:** company blurb, address, phone, email · four link columns (Destinations, Adventures, Plan, Company) · credentials line.
 
-**Within pages:** breadcrumbs on every inner page (also emitted as BreadcrumbList JSON-LD); sticky in-page section nav on long pages (Travel essentials, Stays); "Combine it with" / "More adventures" cross-links; a plan-your-trip banner at the foot of every page.
+**Within pages:** no breadcrumbs (removed 2026-10-12 at the owner's request); sticky in-page section nav on long pages (Travel essentials, Stays); "Combine it with" / "More adventures" cross-links; a plan-your-trip banner at the foot of every page.
 
 ## Primary user journeys
 
 1. **Inspiration → inquiry:** Home → destination card → destination page → "Plan a trip to X" → contact form with X preselected.
-1. **Search → book:** Home hero search or header search icon → Find a trip (filtered) → trip page → sticky "Send an inquiry" / phone "Enquire" bar → booking request with the trip preselected.
+1. **Search → book:** Home hero search or header search icon → Experiences (filtered) → trip page → sticky "Send an inquiry" / phone "Enquire" bar → booking request with the trip preselected.
 2. **Activity-led:** Home → Adventures → Rafting → compare rivers by season → "Ask about white-water rafting".
 3. **Practical planning:** Home "When to visit" → Travel essentials → visas/customs → inquiry.
 4. **Trust check:** any page → About (leadership, registrations, NATTA/NATO) → Contact.

@@ -24,7 +24,7 @@ You can save the photo as `.jpg`, `.jpeg`, `.png`, `.webp` or `.avif` (the logo 
 | `adventures/<name>` | Adventure cards and the top of each adventure page | Landscape, at least 2400 × 1500 px. |
 | `rivers/<name>` | The top of each river card on the rafting page, and the header of that river's trip page | Landscape 3:2, at least 1200 × 800 px. Optional. |
 | `hotels/<name>` | Hotel cards on the Stays page; for Soaltee Crowne Plaza, also the page header | Landscape 3:2, at least 1200 × 800 px (2400 × 1500 for Soaltee). Optional. Use photos the hotel allows partners to use. |
-| `pages/trips`, `pages/guides` | Headers of Find a trip and Travel guides | Same as other page headers. |
+| `pages/experiences`, `pages/guides` | Headers of Experiences and Travel guides | Same as other page headers. |
 | `pages/category-tours` | The "Tours" category card on the home page (the other category cards reuse the adventure photos) | Landscape or square, at least 1200 × 1200 px; text sits on the lower half. |
 | `gallery/destinations/<name>/`, `gallery/rivers/<name>/` (folders) | The photo gallery slider on that destination or river trip page | Any number of landscape 4:3 photos, at least 1600 × 1200 px. Name them `01-…`, `02-…` to set the order; the rest of the file name becomes the caption, e.g. `01-phewa-lake-at-dawn.jpg` → "Phewa lake at dawn". Optional. |
 | `team/ceo`, `team/executive-director` | Leadership portraits on the About page | Square, at least 400 × 400 px, face centred. |

@@ -1,5 +1,4 @@
 import { getContent } from "@/content";
-import { lp } from "@/i18n/config";
 import { getLocale } from "@/i18n/params";
 import { getUI } from "@/i18n/ui";
 import { photoKey } from "@/lib/images";
@@ -29,7 +28,6 @@ export default async function AdventuresPage({ params }: PageProps<"/[lang]/adve
         lead={t.lead}
         image={{ alt: t.heroImage, tone: "forest" }}
         photo={photoKey.page("adventures")}
-        breadcrumbs={[{ label: ui.common.home, href: lp(locale, "/") }, { label: t.eyebrow }]}
       />
       <Section>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">

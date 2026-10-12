@@ -14,9 +14,9 @@ Every component lives in `web/src/components`. "Server" components ship no JavaS
 | `FactGrid` | Server | `facts: Fact[]`, `columns?`, `invert?` | Label/value tiles for fast facts and hotel highlights |
 | `Accordion` | Server | `items: {title, content, id?, defaultOpen?}[]` | Native `<details>`; no JS, fully indexable |
 | `Tabs` | **Client** | `label`, `tabs: {id, label, content}[]` | WAI-ARIA tabs with arrow-key support; all panels in the HTML |
-| `PageHero` | Server | `eyebrow?`, `title`, `lead?`, `image`, `breadcrumbs?`, `children?` | Full-bleed inner-page hero over artwork, with a gradient for legibility |
+| `PageHero` | Server | `eyebrow?`, `title`, `lead?`, `image`, `children?` | Full-bleed inner-page hero over artwork, with a gradient for legibility |
 | `Artwork` | Server | `image: ImageSpec`, `priority?`, `sizes?` | Real photo via `next/image`, or generated mountain art until one exists |
-| `Breadcrumbs` | Server | `items`, `invert?` | Visible trail plus BreadcrumbList JSON-LD |
+| `Breadcrumbs` | Server | `items`, `invert?`, `backLabel?` | Not used since breadcrumbs were removed (2026-10-12); kept in case they come back |
 | `Icon` | Server | `name`, `className?` | Inline stroke icon set (plane, bell, lotus, car, pin, phone…) |
 | `VerifyNote` | Server | `note?`, `inline?` | Dev-only red badge for facts to confirm before launch |
 | `Placeholder` | Server | `children` | Visible marker for content missing from the source (office hours, map) |
@@ -44,8 +44,8 @@ Every component lives in `web/src/components`. "Server" components ship no JavaS
 | `LeaderMessage` | Server | About | Message card; optional disclosure with the original Japanese text |
 | `TrustStrip` | Server | Home, Services, About | Government registrations and NATTA/NATO memberships |
 | `CtaBanner` | Server | Every page | Closing call to action with tap-to-call |
-| `TripCard`, `CategoryCard` | Server | Home, Find a trip, trip pages | Trip card with type/grade badges, duration, price or "Price on request"; category tile with count |
-| `TripFinder` | **Client** | Find a trip | Search, filters, sort, URL sync, mobile filter sheet, live count, empty state |
+| `TripCard`, `CategoryCard` | Server | Home, Experiences, trip pages | Trip card with type/grade badges, duration, price or "Price on request"; category tile with count |
+| `TripFinder` | **Client** | Experiences | Search, filters, sort, URL sync, mobile filter sheet, live count, empty state |
 | `ItineraryTimeline` | Server | River pages | Numbered expandable steps with "Expand all" |
 | `BookingCard`, `PricingSection`, `MobileBookingBar` | Server | Trip and destination pages | Sticky booking card, price table or quote panel, fixed phone booking bar |
 | `BookingForm` | **Client** | Contact | 3-step booking request: trip & dates, details, review & consent; draft saved locally; success state with reference |

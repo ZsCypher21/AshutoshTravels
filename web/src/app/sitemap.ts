@@ -8,7 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const { destinations, adventures, hotels, raftingRivers } = getContent("en");
   const paths = [
     "/",
-    "/trips",
+    "/experiences",
     "/destinations",
     ...destinations.map((d) => `/destinations/${d.slug}`),
     "/adventures",

@@ -1,5 +1,4 @@
 import { getContent } from "@/content";
-import { lp } from "@/i18n/config";
 import { getLocale } from "@/i18n/params";
 import { getUI } from "@/i18n/ui";
 import { photoKey } from "@/lib/images";
@@ -32,7 +31,6 @@ export default async function ServicesPage({ params }: PageProps<"/[lang]/servic
         lead={t.lead}
         image={{ alt: t.heroImage, tone: "dawn" }}
         photo={photoKey.page("services")}
-        breadcrumbs={[{ label: ui.common.home, href: lp(locale, "/") }, { label: t.eyebrow }]}
       />
       <Section>
         <SectionHeading eyebrow={t.core.eyebrow} title={t.core.title} />

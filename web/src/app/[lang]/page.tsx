@@ -71,7 +71,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
             {t.lead}
           </p>
           {/* Quick trip search: a plain GET form, so it works before JavaScript loads */}
-          <form action={l("/trips")} role="search" className="mt-9 flex max-w-2xl flex-col gap-2 rounded-[1.75rem] bg-white/95 p-2 shadow-[var(--shadow-lift)] backdrop-blur sm:flex-row sm:items-center sm:rounded-full">
+          <form action={l("/experiences")} role="search" className="mt-9 flex max-w-2xl flex-col gap-2 rounded-[1.75rem] bg-white/95 p-2 shadow-[var(--shadow-lift)] backdrop-blur sm:flex-row sm:items-center sm:rounded-full">
             <label className="relative flex-1">
               <span className="sr-only">{hx.searchLabel}</span>
               <Icon name="search" className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-ink-500" />
@@ -104,7 +104,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
             <CategoryCard
               key={cat.key}
               locale={locale}
-              href={l(`/trips?type=${cat.key}`)}
+              href={l(`/experiences?type=${cat.key}`)}
               title={ui.trips.categories[cat.key]}
               text={ui.trips.categoryBlurbs[cat.key]}
               count={trips.filter((x) => x.category === cat.key).length}
@@ -159,7 +159,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
           eyebrow={hx.featured.eyebrow}
           title={hx.featured.title}
           lead={t.adventures.lead}
-          action={<ButtonLink href={l("/trips")} variant="outline">{hx.featured.all}</ButtonLink>}
+          action={<ButtonLink href={l("/experiences")} variant="outline">{hx.featured.all}</ButtonLink>}
         />
         <div className="-mx-4 grid snap-x snap-mandatory auto-cols-[82%] grid-flow-col gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] sm:mx-0 sm:auto-cols-auto sm:grid-flow-row sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-4">
           {featured.map((x) => (

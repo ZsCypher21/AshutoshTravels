@@ -32,7 +32,7 @@ const groups: { title: string; note?: string; slots: Slot[] }[] = [
       ["about", "About us"],
       ["contact", "Contact"],
       ["not-found", "404 page"],
-      ["trips", "Find a trip"],
+      ["experiences", "Experiences"],
       ["guides", "Travel guides"],
       ["category-tours", "Home page \"Tours\" category card (the other category cards use the adventure photos)"],
     ].map(([k, where]) => ({ key: photoKey.page(k), where })),

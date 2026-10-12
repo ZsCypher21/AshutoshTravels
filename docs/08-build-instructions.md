@@ -51,7 +51,7 @@ All copy is in `web/src/content/en/` (English) and `web/src/content/ja/` (Japane
 | `../pricing.ts` | Trip prices by trip slug (empty until the agency supplies prices) |
 | `../reviews.ts` | Traveller reviews (empty until genuine reviews are added) |
 
-Save, and the dev server refreshes. To add a destination, append an object to `destinations` in both languages; its page, menu entry, footer link, sitemap entry and Find-a-trip card appear automatically. The same goes for a new rafting river, which also gets its own trip page. Prices, reviews, gallery folders and the office map pin are explained in [10-ux-upgrades.md](10-ux-upgrades.md).
+Save, and the dev server refreshes. To add a destination, append an object to `destinations` in both languages; its page, menu entry, footer link, sitemap entry and Experiences card appear automatically. The same goes for a new rafting river, which also gets its own trip page. Prices, reviews, gallery folders and the office map pin are explained in [10-ux-upgrades.md](10-ux-upgrades.md).
 
 ## Adding photos
 
