@@ -24,7 +24,7 @@ export function MapEmbed({
   const openHref = `https://www.google.com/maps/search/?api=1&query=${q}`;
   return (
     <div className="overflow-hidden rounded-[var(--radius-card)] bg-white ring-1 ring-ink-900/5">
-      <div className="relative aspect-[16/10] bg-sand-100 sm:aspect-[16/7]">
+      <div className="relative grid aspect-[16/10] place-items-center bg-sand-100 sm:aspect-[16/7]">
         {loaded ? (
           <iframe
             title={title}
@@ -34,7 +34,7 @@ export function MapEmbed({
             referrerPolicy="no-referrer-when-downgrade"
           />
         ) : (
-          <div className="absolute inset-0 grid place-items-center p-6 text-center">
+          <div className="px-6 py-8 text-center">
             <svg aria-hidden viewBox="0 0 400 200" className="absolute inset-0 size-full text-sand-300" preserveAspectRatio="none">
               <path d="M0 140 C80 120 120 160 200 130 S320 90 400 110" fill="none" stroke="currentColor" strokeWidth="3" />
               <path d="M0 60 C90 80 150 40 230 70 S340 50 400 30" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="6 8" />
@@ -43,7 +43,7 @@ export function MapEmbed({
               <span className="mx-auto grid size-12 place-items-center rounded-full bg-white text-saffron-600 shadow-[var(--shadow-card)]">
                 <Icon name="pin" className="size-6" />
               </span>
-              <p className="mt-3 font-display text-xl text-ink-900">{title}</p>
+              <p className="mt-3 font-display text-lg leading-snug text-ink-900 sm:text-xl">{title}</p>
               <button type="button" onClick={() => setLoaded(true)} className="mt-4 inline-flex h-11 items-center gap-2 rounded-full bg-ink-900 px-5 text-sm font-semibold text-white hover:bg-ink-700">
                 <Icon name="map" className="size-4" /> {t.show}
               </button>
