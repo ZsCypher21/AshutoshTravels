@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { TripCategory } from "@/lib/types";
 import type { UI } from "@/i18n/ui";
+import { Select } from "@/components/ui/Select";
 import { Icon } from "@/components/ui/Icon";
 
 export type FinderItem = {
@@ -188,7 +189,7 @@ export function TripFinder({
               value={f.q}
               onChange={(e) => set("q", e.target.value)}
               placeholder={t.searchPlaceholder}
-              className="h-12 w-full rounded-full border border-sand-300 bg-white pl-12 pr-4 text-ink-900 placeholder:text-ink-300 focus:border-saffron-500 focus:outline-none focus:ring-2 focus:ring-saffron-300/50"
+              className="h-12 w-full rounded-full border border-sand-300 bg-white pl-12 pr-4 text-ink-900 shadow-[0_1px_2px_rgb(20_26_46/0.04)] transition-[border-color,box-shadow] placeholder:text-ink-300 hover:border-ink-300 focus:border-saffron-500 focus:outline-none focus:ring-4 focus:ring-saffron-300/30"
             />
           </label>
           <div className="flex items-center gap-2">
@@ -200,20 +201,23 @@ export function TripFinder({
               <Icon name="sliders" className="size-4" /> {t.filters}
               {active > 0 && <span className="grid size-5 place-items-center rounded-full bg-saffron-500 text-[11px] text-ink-950">{active}</span>}
             </button>
-            <label className="relative flex-1 sm:flex-none">
-              <span className="sr-only">{t.sort}</span>
-              <select
-                value={f.sort}
-                onChange={(e) => set("sort", e.target.value as Sort)}
-                className="h-12 w-full appearance-none rounded-full border border-sand-300 bg-white pl-5 pr-10 text-sm font-medium text-ink-900 focus:border-saffron-500 focus:outline-none"
-              >
-                <option value="recommended">{t.sortRecommended}</option>
-                <option value="shortest">{t.sortShortest}</option>
-                <option value="longest">{t.sortLongest}</option>
-                <option value="name">{t.sortName}</option>
-              </select>
-              <Icon name="chevron" className="pointer-events-none absolute right-4 top-1/2 size-4 -translate-y-1/2 rotate-90 text-ink-500" />
-            </label>
+            <Select
+              variant="pill"
+              ariaLabel={t.sort}
+              className="flex-1 sm:flex-none"
+              value={f.sort}
+              onChange={(v) => set("sort", v as Sort)}
+              groups={[
+                {
+                  options: [
+                    { value: "recommended", label: t.sortRecommended },
+                    { value: "shortest", label: t.sortShortest },
+                    { value: "longest", label: t.sortLongest },
+                    { value: "name", label: t.sortName },
+                  ],
+                },
+              ]}
+            />
           </div>
         </form>
 

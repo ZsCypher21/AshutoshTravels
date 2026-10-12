@@ -4,9 +4,10 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { contactPrefs, inquirySchema, travelStyles } from "@/lib/inquiry-schema";
 import type { UI } from "@/i18n/ui";
 import { Button } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icon";
+import { Icon, type IconName } from "@/components/ui/Icon";
+import { Select } from "@/components/ui/Select";
 
-export type TripOption = { slug: string; name: string; category: string; duration: string; price: string };
+export type TripOption = { slug: string; name: string; kind: "tours" | "rafting" | "adventure" | "biking"; category: string; duration: string; price: string };
 
 type Draft = {
   trip: string;
@@ -28,9 +29,10 @@ type Draft = {
 type Status = { kind: "idle" } | { kind: "sending" } | { kind: "sent"; reference: string } | { kind: "error"; message: string };
 
 const DRAFT_KEY = "att-booking-draft";
-const field =
-  "mt-1.5 block w-full rounded-xl border border-sand-300 bg-white px-4 py-3 text-ink-900 placeholder:text-ink-300 focus:border-saffron-500 focus:outline-none focus:ring-2 focus:ring-saffron-300/50";
-const labelCls = "text-sm font-medium text-ink-800";
+// Shared form styles live in globals.css (.form-field, .form-label, .select, .form-check).
+const field = "form-field";
+const labelCls = "form-label";
+const kindIcon: Record<TripOption["kind"], IconName> = { tours: "mountain", rafting: "wave", adventure: "compass", biking: "bike" };
 const today = () => new Date().toISOString().slice(0, 10);
 
 /**
@@ -172,17 +174,23 @@ export function BookingForm({
     );
   }
 
-  const err = (k: string) => errors[k] && <p id={`${k}-error`} className="mt-1 text-sm text-crimson-600">{errors[k]}</p>;
+  const err = (k: string) =>
+    errors[k] && (
+      <p id={`${k}-error`} className="mt-1.5 flex items-center gap-1.5 text-sm font-medium text-crimson-600">
+        <Icon name="info" className="size-4 shrink-0" />
+        {errors[k]}
+      </p>
+    );
 
   const counter = (k: "adults" | "children", label: string, min: number) => (
     <div>
       <span className={labelCls} id={`${k}-label`}>{label}</span>
-      <div className="mt-1.5 flex h-[50px] items-center justify-between rounded-xl border border-sand-300 bg-white px-2" role="group" aria-labelledby={`${k}-label`}>
-        <button type="button" aria-label={`${t.decrease}: ${label}`} disabled={d[k] <= min} onClick={() => set(k, d[k] - 1)} className="grid size-9 place-items-center rounded-lg text-ink-700 transition-colors hover:bg-sand-100 disabled:opacity-30">
+      <div className="mt-1.5 flex min-h-[3.25rem] items-center justify-between rounded-2xl border border-sand-300 bg-white px-2 shadow-[0_1px_2px_rgb(20_26_46/0.04)] transition-colors hover:border-ink-300" role="group" aria-labelledby={`${k}-label`}>
+        <button type="button" aria-label={`${t.decrease}: ${label}`} disabled={d[k] <= min} onClick={() => set(k, d[k] - 1)} className="grid size-9 place-items-center rounded-full bg-sand-100 text-ink-700 transition-colors hover:bg-saffron-100 hover:text-saffron-700 disabled:bg-transparent disabled:opacity-30">
           <Icon name="minus" className="size-4" />
         </button>
-        <output aria-live="polite" className="min-w-8 text-center font-semibold">{d[k]}</output>
-        <button type="button" aria-label={`${t.increase}: ${label}`} disabled={d[k] >= 200} onClick={() => set(k, d[k] + 1)} className="grid size-9 place-items-center rounded-lg text-ink-700 transition-colors hover:bg-sand-100 disabled:opacity-30">
+        <output aria-live="polite" className="min-w-8 text-center text-lg font-semibold tabular-nums">{d[k]}</output>
+        <button type="button" aria-label={`${t.increase}: ${label}`} disabled={d[k] >= 200} onClick={() => set(k, d[k] + 1)} className="grid size-9 place-items-center rounded-full bg-sand-100 text-ink-700 transition-colors hover:bg-saffron-100 hover:text-saffron-700 disabled:bg-transparent disabled:opacity-30">
           <Icon name="plus" className="size-4" />
         </button>
       </div>
@@ -233,28 +241,43 @@ export function BookingForm({
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div className="sm:col-span-2">
               <label htmlFor="trip" className={labelCls}>{t.trip}</label>
-              <select id="trip" value={d.trip} onChange={(e) => set("trip", e.target.value)} className={field}>
-                <option value="">{t.tripCustom}</option>
-                {Object.entries(
-                  trips.reduce<Record<string, TripOption[]>>((acc, x) => ((acc[x.category] ??= []).push(x), acc), {}),
-                ).map(([cat, list]) => (
-                  <optgroup key={cat} label={cat}>
-                    {list.map((x) => (
-                      <option key={x.slug} value={x.slug}>{x.name}</option>
-                    ))}
-                  </optgroup>
-                ))}
-              </select>
+              <Select
+                id="trip"
+                icon="compass"
+                value={d.trip}
+                onChange={(v) => set("trip", v)}
+                groups={[
+                  { options: [{ value: "", label: t.tripCustom }] },
+                  ...Object.values(
+                    trips.reduce<Record<string, TripOption[]>>((acc, x) => ((acc[x.category] ??= []).push(x), acc), {}),
+                  ).map((list) => ({
+                    label: list[0].category,
+                    icon: kindIcon[list[0].kind],
+                    options: list.map((x) => ({
+                      value: x.slug,
+                      label: x.name,
+                      detail: (
+                        <>
+                          <span className="inline-flex items-center gap-1"><Icon name="clock" className="size-3" />{x.duration}</span>
+                          <span className="inline-flex items-center gap-1"><Icon name="tag" className="size-3" />{x.price}</span>
+                        </>
+                      ),
+                    })),
+                  })),
+                ]}
+              />
               {selected && (
-                <div className="mt-3 flex items-center justify-between gap-3 rounded-xl bg-sand-100 px-4 py-3 text-sm">
-                  <span>
-                    <span className="block text-xs text-ink-500">{t.selected}</span>
-                    <span className="font-semibold">{selected.name}</span>
+                <div className="mt-3 flex items-center gap-3 rounded-2xl border border-saffron-300/60 bg-saffron-100/50 p-3 pr-4 text-sm motion-safe:animate-fade-up">
+                  <span aria-hidden className="grid size-10 shrink-0 place-items-center rounded-xl bg-white text-saffron-600 shadow-[0_1px_2px_rgb(20_26_46/0.06)]">
+                    <Icon name="check" className="size-5" />
                   </span>
-                  <span className="text-right text-xs text-ink-700">
-                    {selected.duration}
-                    <br />
-                    {selected.price}
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-xs font-medium text-ink-500">{t.selected}</span>
+                    <span className="block truncate font-semibold text-ink-900">{selected.name}</span>
+                  </span>
+                  <span className="flex shrink-0 flex-col items-end gap-1 text-xs font-medium text-ink-700">
+                    <span className="inline-flex items-center gap-1"><Icon name="clock" className="size-3.5 text-ink-500" />{selected.duration}</span>
+                    <span className="inline-flex items-center gap-1"><Icon name="tag" className="size-3.5 text-ink-500" />{selected.price}</span>
                   </span>
                 </div>
               )}
@@ -270,8 +293,9 @@ export function BookingForm({
                       type="button"
                       aria-pressed={on}
                       onClick={() => set("interests", on ? d.interests.filter((x) => x !== opt) : [...d.interests, opt])}
-                      className={`rounded-full border px-3.5 py-1.5 text-sm transition-colors ${on ? "border-ink-900 bg-ink-900 text-white" : "border-sand-300 bg-white text-ink-700 hover:border-ink-500"}`}
+                      className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm transition-colors ${on ? "border-ink-900 bg-ink-900 text-white" : "border-sand-300 bg-white text-ink-700 hover:border-ink-500"}`}
                     >
+                      {on && <Icon name="check" className="size-3.5" />}
                       {opt}
                     </button>
                   );
@@ -282,19 +306,19 @@ export function BookingForm({
               <label htmlFor="startDate" className={labelCls}>{t.startDate}</label>
               <input id="startDate" type="date" min={today()} value={d.startDate} onChange={(e) => set("startDate", e.target.value)} aria-invalid={!!errors.startDate} aria-describedby="startDate-error" className={field} />
               {err("startDate")}
-              <label className="mt-2 flex items-center gap-2 text-sm text-ink-700">
-                <input type="checkbox" checked={d.flexibleDates} onChange={(e) => set("flexibleDates", e.target.checked)} className="size-4 accent-saffron-600" />
+              <label className="mt-2.5 flex cursor-pointer items-center gap-2.5 text-sm text-ink-700">
+                <input type="checkbox" checked={d.flexibleDates} onChange={(e) => set("flexibleDates", e.target.checked)} className="form-check" />
                 {t.flexible}
               </label>
             </div>
             <div>
               <label htmlFor="travelStyle" className={labelCls}>{f.travelStyle}</label>
-              <select id="travelStyle" value={d.travelStyle} onChange={(e) => set("travelStyle", e.target.value)} className={field}>
-                <option value="">{f.noPreference}</option>
-                {travelStyles.map((s) => (
-                  <option key={s} value={s}>{styleLabel[s]}</option>
-                ))}
-              </select>
+              <Select
+                id="travelStyle"
+                value={d.travelStyle}
+                onChange={(v) => set("travelStyle", v)}
+                groups={[{ options: [{ value: "", label: f.noPreference }, ...travelStyles.map((s) => ({ value: s, label: styleLabel[s] }))] }]}
+              />
             </div>
             {counter("adults", t.adults, 1)}
             {counter("children", t.children, 0)}
@@ -327,7 +351,7 @@ export function BookingForm({
                 {contactPrefs.map((p) => (
                   <label key={p} className="cursor-pointer">
                     <input type="radio" name="contactPref" value={p} checked={d.contactPref === p} onChange={() => set("contactPref", p)} className="peer sr-only" />
-                    <span className="flex h-11 items-center justify-center rounded-xl border border-sand-300 bg-white text-sm font-medium text-ink-700 transition-colors peer-checked:border-ink-900 peer-checked:bg-ink-900 peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-saffron-500">
+                    <span className="flex h-12 items-center justify-center rounded-2xl border border-sand-300 bg-white text-sm font-medium text-ink-700 shadow-[0_1px_2px_rgb(20_26_46/0.04)] transition-colors hover:border-ink-300 peer-checked:border-ink-900 peer-checked:bg-ink-900 peer-checked:text-white peer-focus-visible:ring-4 peer-focus-visible:ring-saffron-300/40">
                       {prefLabel[p]}
                     </span>
                   </label>
@@ -345,7 +369,7 @@ export function BookingForm({
         {step === 2 && (
           <div>
             <p className="font-display text-2xl text-ink-900">{t.reviewTitle}</p>
-            <dl className="mt-4 divide-y divide-sand-200 rounded-xl border border-sand-200 px-4">
+            <dl className="mt-4 divide-y divide-sand-200 rounded-2xl border border-sand-200 bg-white px-4 shadow-[0_1px_2px_rgb(20_26_46/0.04)]">
               {summaryRow(t.trip, selected?.name ?? t.tripCustom, 0)}
               {summaryRow(f.interests, d.interests.join(", "), 0)}
               {summaryRow(t.startDate, d.startDate ? `${d.startDate}${d.flexibleDates ? ` (${t.flexible})` : ""}` : d.flexibleDates ? t.flexible : "", 0)}
@@ -357,8 +381,8 @@ export function BookingForm({
               {summaryRow(t.contactPref, prefLabel[d.contactPref], 1)}
               {summaryRow(f.plans.replace(" *", ""), <span className="line-clamp-3 whitespace-pre-line">{d.message}</span>, 1)}
             </dl>
-            <label className="mt-5 flex items-start gap-3 text-sm text-ink-800">
-              <input id="consent" type="checkbox" checked={d.consent} onChange={(e) => set("consent", e.target.checked)} aria-invalid={!!errors.consent} aria-describedby="consent-error" className="mt-0.5 size-4 shrink-0 accent-saffron-600" />
+            <label className="mt-5 flex cursor-pointer items-start gap-3 rounded-2xl border border-sand-200 bg-sand-50 p-4 text-sm leading-relaxed text-ink-800 transition-colors hover:border-sand-300">
+              <input id="consent" type="checkbox" checked={d.consent} onChange={(e) => set("consent", e.target.checked)} aria-invalid={!!errors.consent} aria-describedby="consent-error" className="form-check mt-0.5" />
               {t.consent}
             </label>
             {err("consent")}

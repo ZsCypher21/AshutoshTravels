@@ -38,6 +38,7 @@ export default async function ContactPage({ params, searchParams }: PageProps<"/
   const tripOptions: TripOption[] = trips.map((x) => ({
     slug: x.slug,
     name: x.name,
+    kind: x.category,
     category: ui.trips.categories[x.category],
     duration: x.durationLabel,
     price: x.pricing ? `${ui.trips.from} ${formatMoney(locale, x.pricing.fromPerPerson, x.pricing.currency)} ${ui.trips.perPerson}`.trim() : ui.trips.priceOnRequest,

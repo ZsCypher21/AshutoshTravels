@@ -7,7 +7,7 @@ export const contactPrefs = ["email", "phone", "whatsapp"] as const;
 const optionalText = (max: number) => z.string().trim().max(max).optional().or(z.literal(""));
 
 export const inquirySchema = z.object({
-  /** Trip slug from src/lib/trips.ts, or "" for a custom trip */
+  /** "Which experience are you interested in?": an experience (trip) slug from src/lib/trips.ts, or "" for a custom experience */
   trip: optionalText(120),
   interests: z.array(z.string().max(80)).max(20).default([]),
   /** ISO date (yyyy-mm-dd) */
